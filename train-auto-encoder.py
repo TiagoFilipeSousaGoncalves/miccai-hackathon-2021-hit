@@ -11,7 +11,6 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 class ModHushemDataset(Dataset):
-    """Face Landmarks dataset."""
 
     def __init__(self, root_dir, ids, transform=None):
         """
