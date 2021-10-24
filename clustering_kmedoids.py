@@ -8,10 +8,12 @@ from torch.utils.data import DataLoader
 from tqdm import tqdm
 import numpy as np
 from sklearn_extra.cluster import KMedoids
+from sklearn.decomposition import PCA
 from sklearn.metrics import cohen_kappa_score
 import matplotlib.pyplot as plt
 from ae import AE
 from sklearn.metrics.pairwise import euclidean_distances, cosine_distances
+from sklearn.metrics import accuracy_score
 
 ckpt_path = "auto_encoder_train_500epochs.pt"
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -131,4 +133,37 @@ for i in range(1, nr_annotators+1):
     ck_dist = cohen_kappa_score(preds_annotator, preds_clustering_dist, labels=[0, 1, 2, 3])
     ck_medoids = cohen_kappa_score(preds_annotator, preds_clustering_medoids, labels=[0, 1, 2, 3])
 
-    print(f"Annotator {i} Cohen's kappa: {np.round(ck_class, 4)} / {np.round(ck_dist,4)} / {np.round(ck_medoids,4)}")
+    acc_class = accuracy_score(preds_clustering_class, preds_annotator)
+    acc_dist = accuracy_score(preds_clustering_dist, preds_annotator)
+    acc_medoids = accuracy_score(preds_clustering_medoids, preds_annotator)
+
+
+    print(f"Annotator {i}:")
+    print(f"Cohen's kappa: {np.round(ck_class, 4)} / {np.round(ck_dist,4)} / {np.round(ck_medoids,4)}")
+    print(f"% failures: {np.round(1-acc_class, 4)} / {np.round(1-acc_dist,4)} / {np.round(1-acc_medoids,4)}")
+
+
+X_embedded_tsne = PCA(n_components=2).fit_transform(X)
+
+plt.figure(1)
+for cid in cluster_ids:
+    idxs = np.where(cluster_output == cid)
+    x_cid = X_embedded_tsne[idxs]
+    annotators = train_df.iloc[idxs]["annotator"].values
+    plt.scatter(x_cid[:,0], x_cid[:,1]-0.03, label="cluster id " + str(cid))
+    for i in range(len(annotators)):
+        plt.text(x_cid[i,0], x_cid[i,1], annotators[i], fontsize=9)
+plt.legend()
+plt.title("Clusters with respective annotators")
+
+plt.figure(2)
+for cid in cluster_ids:
+    idxs = np.where(cluster_output == cid)
+    x_cid = X_embedded_tsne[idxs]
+    labels = train_df.iloc[idxs]["label"].values
+    plt.scatter(x_cid[:,0], x_cid[:,1]-0.03, label="cluster id " + str(cid))
+    for i in range(len(labels)):
+        plt.text(x_cid[i,0], x_cid[i,1], labels[i], fontsize=9)
+plt.legend()
+plt.title("Clusters with respective class labels")
+plt.show()
