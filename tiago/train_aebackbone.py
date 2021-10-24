@@ -143,7 +143,7 @@ for epoch in range(EPOCHS):
 
 
     # Iterate through dataloader
-    for batch_idx, (images, labels) in enumerate(train_loader):
+    for batch_idx, (images, labels, _) in enumerate(train_loader):
 
         # Move data data anda model to GPU (or not)
         images, labels = images.to(DEVICE), labels.to(DEVICE)
