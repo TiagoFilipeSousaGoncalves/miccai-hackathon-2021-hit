@@ -1,20 +1,16 @@
-import torch
-import torchvision
-import os
-import numpy as np
 from PIL import Image
-import matplotlib.pyplot as plt
 from torchvision import transforms
 from torch.utils.data import Dataset, DataLoader
 from tqdm import tqdm
+import torch
+import torchvision
+import os
 import glob
+import numpy as np
 import pandas as pd
-
-input_shape = (131, 131, 3)
-
+import matplotlib.pyplot as plt
 
 class ModHushemDataset(Dataset):
-    """Face Landmarks dataset."""
 
     def __init__(self, root_dir, ids, transform=None):
         """
@@ -51,6 +47,7 @@ class AE(torch.nn.Module):
         super().__init__()
           
         # Custom autoencoder 
+        # Encoder
         self.encoder = torch.nn.Sequential(
             torch.nn.Conv2d(3, 16, 3, padding=1),
             torch.nn.ReLU(),
@@ -64,8 +61,7 @@ class AE(torch.nn.Module):
             
         )
 
-        # Building an linear decoder with Linear
-        # layer followed by Relu activation function
+        # Decoder
         # The Sigmoid activation function
         # outputs the value between 0 and 1
 
@@ -83,18 +79,19 @@ class AE(torch.nn.Module):
         decoded = self.decoder(encoded)
         return decoded
 
+input_shape = (131, 131, 3)    
 # Model Initialization
 model = AE()
   
 # Validation using MSE Loss function
 loss_function = torch.nn.MSELoss()
   
-# Using an Adam Optimizer with lr = 0.1
+# Using an Adam Optimizer with lr = 0.01
 optimizer = torch.optim.Adam(model.parameters(),
                              lr = 1e-2,
                              weight_decay = 1e-8)
 
-epochs = 400
+epochs = 500
 outputs = []
 losses = []
 
@@ -114,11 +111,12 @@ df_test = df[df["split"]==1]
 df_val = df[df["split"]==2]
 
 train_ids = [img_id.split("/")[0] + "-" + img_id.split("/")[1] for img_id in df_train["img"]]
-test_ids = [img_id.split("/")[0] + "-" + img_id.split("/")[1] for img_id in df_train["img"]]
-val_ids = [img_id.split("/")[0] + "-" + img_id.split("/")[1] for img_id in df_train["img"]]
+test_ids = [img_id.split("/")[0] + "-" + img_id.split("/")[1] for img_id in df_test["img"]]
+val_ids = [img_id.split("/")[0] + "-" + img_id.split("/")[1] for img_id in df_val["img"]]
 
 train_ids = train_ids.extend(val_ids)
 
+# Resize images to shape (3, 128, 128)
 transform = transforms.Compose([transforms.Resize((128, 128)), transforms.ToTensor()])
 train_dataset = ModHushemDataset(root_dir=root, ids=train_ids, transform=transform)
 
@@ -127,7 +125,7 @@ train_dataloader = DataLoader(train_dataset, batch_size=16, shuffle=True)
 for epoch in range(epochs):
     for step, batch in enumerate(tqdm(train_dataloader)):
         
-      # Reshaping the image to (-1, 961)
+      # Reshaping to (batch_size, n_ch, H, W)
       image = batch["image"].reshape(-1,3,128,128)
         
       # Output of Autoencoder
@@ -141,12 +139,12 @@ for epoch in range(epochs):
       # .step() performs parameter update
       optimizer.zero_grad()
       loss.backward()
-      optimizer.step()
-      #print(loss.item()) 
+      optimizer.step() 
+        
       # Storing the losses in a list for plotting
       losses.append(loss.item())
     
-    print(np.mean(np.array(losses)))
+    print("Loss: %.5f" % np.mean(np.array(losses)))
     torch.save(model, os.path.join(os.getcwd(), "auto_encoder_train_val.pt"))
     
     if epoch // (epochs -1):
