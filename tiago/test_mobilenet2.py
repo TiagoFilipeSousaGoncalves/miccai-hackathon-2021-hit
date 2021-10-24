@@ -158,9 +158,24 @@ with torch.no_grad():
 
 # Print Statistics
 print(f"Test Accuracy: {test_acc}")
-print(y_annotators)
-print(y_test_true) 
-print(y_test_pred)
+# print(y_annotators)
+# print(y_test_true) 
+# print(y_test_pred)
+
+
+# Annotators that failed
+annotators_failed = list()
+
+
+# Go through the annotators
+for idx, ann in enumerate(y_annotators):
+    if y_test_true[idx] != y_test_pred[idx]:
+        annotators_failed.append(ann)
+
+
+# Get the frequencies
+unique, counts = np.unique(np.array(annotators_failed), return_counts=True)
+print(unique, counts)
 
 
 # Finish statement
