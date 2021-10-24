@@ -242,6 +242,9 @@ class AEBackboneClf(torch.nn.Module):
 
         # Apply Global Average Pooling
         outputs = self.globalaveragepool(features)
+        
+        # Flatten
+        outputs = torch.reshape(outputs, (outputs.size(0), -1))
 
         # FC1-Layer
         outputs = self.fc1(outputs)
