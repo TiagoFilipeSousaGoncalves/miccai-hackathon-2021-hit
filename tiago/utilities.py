@@ -207,14 +207,18 @@ class AEBackboneClf(torch.nn.Module):
             torch.nn.MaxPool2d(2,2),
         )
 
+        # Compute in_features
+        _in_features = torch.rand(1, self.channels, self.height, self.width)
+        _in_features = self.features(_in_features)
+
+
         # Apply GlobalAveragePooling
-        self.globalaveragepool = torch.nn.AvgPool2d()
+        self.globalaveragepool = torch.nn.AvgPool2d(kernel_size=_in_features.size(1), stride=0, padding=0)
 
 
         # FC-Layers
-        # Compute in_features
-        _in_features = torch.rand(1, self.channels, self.height, self.width)
-        _in_features = self.globalaveragepool(self.features(_in_features))
+        
+        _in_features = self.globalaveragepool(_in_features)
         _in_features = _in_features.size(0) * _in_features.size(1) * _in_features.size(2) * _in_features.size(3)
 
         # FC1 Layer
