@@ -112,13 +112,16 @@ class MOD_MHSMA(Dataset):
         # Get labels
         label = self.images_labels[idx]
 
+        # Get annotator
+        annotator = self.images_annotators[idx]
+
 
         # Apply transformation
         if self.transform:
             image = self.transform(image)
 
 
-        return image, label
+        return image, label, annotator
 
 
 
