@@ -136,7 +136,7 @@ class MobileNetV2(torch.nn.Module):
 
         # Init modules
         # Backbone to extract features
-        self.mobilenetv2 = torch.hub.load('pytorch/vision:v0.10.0', 'mobilenet_v2', pretrained=True).features
+        self.mobilenetv2 = torch.hub.load('pytorch/vision:v0.8.0', 'mobilenet_v2', pretrained=True).features
 
         # FC-Layers
         # Compute in_features
