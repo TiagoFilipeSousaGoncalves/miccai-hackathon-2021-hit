@@ -43,20 +43,14 @@ class ModHushemDataset(Dataset):
         
         label = dir_
         sample = {'image': img, 'label': label}
-
- 
-
         return sample
 
 class AE(torch.nn.Module):
+    
     def __init__(self):
         super().__init__()
           
-        # Building an linear encoder with Linear
-        # layer followed by Relu activation function
-        
-
-
+        # Custom autoencoder 
         self.encoder = torch.nn.Sequential(
             torch.nn.Conv2d(3, 16, 3, padding=1),
             torch.nn.ReLU(),
@@ -75,7 +69,6 @@ class AE(torch.nn.Module):
         # The Sigmoid activation function
         # outputs the value between 0 and 1
 
-     
         self.decoder = torch.nn.Sequential(
             torch.nn.ConvTranspose2d(64, 32, 2, 2),
             torch.nn.ReLU(),
@@ -90,7 +83,6 @@ class AE(torch.nn.Module):
         decoded = self.decoder(encoded)
         return decoded
 
- 
 # Model Initialization
 model = AE()
   
@@ -114,7 +106,6 @@ for elem in categories:
     for i in range(len(os.listdir(os.path.join(root, elem)))):
         idx = str(i+1).zfill(2)
         ids.append(elem+'-'+idx)
-
 
 df = pd.read_csv(os.path.join(os.getcwd(), "file.csv"))
 
