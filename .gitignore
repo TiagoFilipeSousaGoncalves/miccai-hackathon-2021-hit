@@ -127,3 +127,14 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Data
+data/
+data/mod-hushem
+data/mod-mhsma
+
+# macOS
+*.DS_Store
+
+# PyTorch
+*.pt
