@@ -123,8 +123,8 @@ df_test = df[df["split"]==1]
 df_val = df[df["split"]==2]
 
 train_ids = [img_id.split("/")[0] + "-" + img_id.split("/")[1] for img_id in df_train["img"]]
-test_ids = [img_id.split("/")[0] + "-" + img_id.split("/")[1] for img_id in df_train["img"]]
-val_ids = [img_id.split("/")[0] + "-" + img_id.split("/")[1] for img_id in df_train["img"]]
+test_ids = [img_id.split("/")[0] + "-" + img_id.split("/")[1] for img_id in df_test["img"]]
+val_ids = [img_id.split("/")[0] + "-" + img_id.split("/")[1] for img_id in df_val["img"]]
 
 train_ids = train_ids.extend(val_ids)
 
