@@ -81,7 +81,7 @@ DEVICE = "cuda:1" if torch.cuda.is_available() else "cpu"
 
 
 # Hyper-parameters
-EPOCHS = 300
+EPOCHS = 500
 LOSS = torch.nn.CrossEntropyLoss()
 LEARNING_RATE = 1e-4
 OPTIMISER = torch.optim.Adam(model.parameters(), lr=LEARNING_RATE)
