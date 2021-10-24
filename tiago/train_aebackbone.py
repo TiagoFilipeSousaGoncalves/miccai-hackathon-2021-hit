@@ -94,8 +94,8 @@ BATCH_SIZE = 16
 train_transforms = torchvision.transforms.Compose([
     torchvision.transforms.Resize((128, 128)),
     # Data Augmentation
-    torchvision.transforms.RandomAffine(degrees=(-10, 10), translate=(0.05, 0.1), scale=(0.95, 1.05), shear=0, resample=0, fillcolor=(0, 0, 0)),
-    torchvision.transforms.RandomHorizontalFlip(p=0.5),
+    # torchvision.transforms.RandomAffine(degrees=(-10, 10), translate=(0.05, 0.1), scale=(0.95, 1.05), shear=0, resample=0, fillcolor=(0, 0, 0)),
+    # torchvision.transforms.RandomHorizontalFlip(p=0.5),
     torchvision.transforms.ToTensor(),
     # torchvision.transforms.Normalize(mean=MEAN, std=STD)
 ])
@@ -199,10 +199,10 @@ for epoch in range(EPOCHS):
 
         # Save checkpoint
         # Baseline
-        # model_path = os.path.join("tiago", "aebackbone.pt")
+        model_path = os.path.join("tiago", "aebackbone.pt")
         
         # Data Augmentation
-        model_path = os.path.join("tiago", "daug_aebackbone.pt")
+        # model_path = os.path.join("tiago", "daug_aebackbone.pt")
         torch.save(model.state_dict(), model_path)
 
         print(f"Successfully saved at: {model_path}")
