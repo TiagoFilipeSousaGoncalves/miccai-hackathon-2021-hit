@@ -105,7 +105,7 @@ train_set = MOD_MHSMA(
     data_dir=data_dir,
     images_paths = train_images_paths,
     images_labels = train_images_labels,
-    iamges_annotators = train_images_annotators,
+    images_annotators = train_images_annotators,
     transform = train_transforms
     )
 
