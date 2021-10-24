@@ -116,7 +116,7 @@ y_test_pred = list()
 
 
 # Load model weights
-model.load_state_dict(torch.load("tiago/mobilenetv2", map_location=DEVICE))
+model.load_state_dict(torch.load("tiago/mobilenetv2.pt", map_location=DEVICE))
 
 # Put model in training mode
 model.eval()
