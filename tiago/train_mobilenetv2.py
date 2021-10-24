@@ -46,13 +46,13 @@ splits = pd.read_csv(os.path.join("tiago", data_splits))
 train_data = splits[splits["split"]!=1]
 
 # Images
-train_images_paths = train_data["img"]
+train_images_paths = train_data["img"].values
 
 # Annotators
-train_images_annotators = train_data["annotator"]
+train_images_annotators = train_data["annotator"].values
 
 # Labels
-train_images_labels = train_data["label"]
+train_images_labels = train_data["label"].values
 
 
 
