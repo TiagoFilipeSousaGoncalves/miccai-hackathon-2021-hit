@@ -104,7 +104,7 @@ class MOD_MHSMA(Dataset):
         
 
         # Get images
-        img_path = self.images_paths[idx] + ".png"
+        img_path = self.images_paths[idx] + ".BMP"
         
         # Open image with PIL
         image = Image.open(os.path.join(self.data_dir, img_path))
