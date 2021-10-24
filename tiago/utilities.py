@@ -217,7 +217,9 @@ class AEBackboneClf(torch.nn.Module):
 
 
         # FC-Layers
-        
+        # Compute in_features
+        _in_features = torch.rand(1, self.channels, self.height, self.width)
+        _in_features = self.features(_in_features)
         _in_features = self.globalaveragepool(_in_features)
         _in_features = _in_features.size(0) * _in_features.size(1) * _in_features.size(2) * _in_features.size(3)
 
