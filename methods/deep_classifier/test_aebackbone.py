@@ -24,7 +24,7 @@ data_splits = "data_splits.csv"
 
 
 # Open files
-splits = pd.read_csv(os.path.join("tiago", data_splits))
+splits = pd.read_csv(os.path.join("methods", "deep_classifier", data_splits))
 # print(splits)
 
 
@@ -117,10 +117,12 @@ y_test_pred = list()
 
 # Load model weights
 # Baseline
-# model.load_state_dict(torch.load("tiago/aebackbone.pt", map_location=DEVICE))
+# print("Baseline")
+# model.load_state_dict(torch.load("methods/deep_classifier/aebackbone.pt", map_location=DEVICE))
 
 # Data Augmentation
-model.load_state_dict(torch.load("tiago/daug_aebackbone.pt", map_location=DEVICE))
+print("Data Augmentation")
+model.load_state_dict(torch.load("methods/deep_classifier/daug_aebackbone.pt", map_location=DEVICE))
 
 # Put model in training mode
 model.eval()

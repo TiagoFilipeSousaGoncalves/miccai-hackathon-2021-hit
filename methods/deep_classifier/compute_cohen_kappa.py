@@ -5,7 +5,7 @@ import pandas as pd
 import PIL
 
 # Sklearn Import
-from sklearn.metrics import cohen_kappa_score
+from sklearn.metrics import cohen_kappa_score, accuracy_score
 
 # PyTorch Imports
 import torch
@@ -37,7 +37,7 @@ DEVICE = "cuda:1" if torch.cuda.is_available() else "cpu"
 
 
 # Open files
-splits = pd.read_csv(os.path.join("tiago", data_splits))
+splits = pd.read_csv(os.path.join("methods", "deep_classifier", data_splits))
 # print(splits)
 
 
@@ -86,10 +86,12 @@ model = AEBackboneClf(channels=CHANNELS, height=HEIGHT, width=WIDTH, nr_classes=
 
 # Load model weights
 # Baseline
-# model.load_state_dict(torch.load("tiago/aebackbone.pt", map_location=DEVICE))
+# print("Baseline")
+# model.load_state_dict(torch.load("methods/deep_classifier/aebackbone.pt", map_location=DEVICE))
 
 # Data Augmentation
-model.load_state_dict(torch.load("tiago/daug_aebackbone.pt", map_location=DEVICE))
+print("Data Augmentation")
+model.load_state_dict(torch.load("methods/deep_classifier/daug_aebackbone.pt", map_location=DEVICE))
 
 # Put model in training mode
 model.eval()
@@ -137,6 +139,11 @@ with torch.no_grad():
         # Compute Cohen Kappa Score
         ck_class = cohen_kappa_score(preds_annotator, preds_model, labels=[0, 1, 2, 3])
 
+        # Check % of failure
+        ann_acc = accuracy_score(preds_annotator, preds_model)
+        failure = 1 - ann_acc
+
 
         # Print results
         print(f"Annotator {i} Cohen's kappa: {np.round(ck_class, 4)}")
+        print(f"Annotator {i} % failure: {failure}")
