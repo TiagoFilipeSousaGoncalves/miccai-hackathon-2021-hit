@@ -213,7 +213,7 @@ class AEBackboneClf(torch.nn.Module):
 
 
         # Apply GlobalAveragePooling
-        self.globalaveragepool = torch.nn.AvgPool2d(kernel_size=_in_features.size(1), stride=0, padding=0)
+        self.globalaveragepool = torch.nn.AvgPool2d(kernel_size=_in_features.size(1))
 
 
         # FC-Layers
