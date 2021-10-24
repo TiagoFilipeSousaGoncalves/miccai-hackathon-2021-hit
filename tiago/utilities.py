@@ -125,7 +125,7 @@ class MOD_MHSMA(Dataset):
 
 
 
-# Model MobileNetV2
+# Model: MobileNetV2
 class MobileNetV2(torch.nn.Module):
     def __init__(self, channels, height, width, nr_classes):
         super(MobileNetV2, self).__init__()
@@ -175,6 +175,75 @@ class MobileNetV2(torch.nn.Module):
 
         # Activation layer
         outputs = self.fc_sigmoid(outputs)
+
+
+        return outputs
+
+
+
+# Model: AEBackbone w/ Classifier
+class AEBackboneClf(torch.nn.Module):
+    
+    def __init__(self, channels, height, width, nr_classes):
+        super(AEBackboneClf, self).__init__()
+
+        # Init variables
+        self.channels = channels
+        self.height = height
+        self.width = width
+        self.nr_classes = nr_classes
+
+          
+        # Custom autoencoder 
+        self.features = torch.nn.Sequential(
+            torch.nn.Conv2d(3, 16, 3, padding=1),
+            torch.nn.ReLU(),
+            torch.nn.MaxPool2d(2,2),
+            torch.nn.Conv2d(16, 32, 3, padding=1),
+            torch.nn.ReLU(),
+            torch.nn.MaxPool2d(2,2),
+            torch.nn.Conv2d(32, 64, 3, padding=1),
+            torch.nn.ReLU(),
+            torch.nn.MaxPool2d(2,2),
+        )
+
+        # Apply GlobalAveragePooling
+        self.globalaveragepool = torch.nn.AvgPool2d()
+
+
+        # FC-Layers
+        # Compute in_features
+        _in_features = torch.rand(1, self.channels, self.height, self.width)
+        _in_features = self.globalaveragepool(self.features(_in_features))
+        _in_features = _in_features.size(0) * _in_features.size(1) * _in_features.size(2) * _in_features.size(3)
+
+        # FC1 Layer
+        self.fc1 = torch.nn.Linear(in_features=_in_features, out_features=256)
+        self.relu1 = torch.nn.ReLU()
+        self.drop1 = torch.nn.Dropout(p=0.5)
+
+        # FC2 Layer
+        self.fc2 = torch.nn.Linear(in_features=256, out_features=4)
+
+
+        return
+
+  
+    def forward(self, inputs):
+        
+        # Features
+        features = self.features(inputs)
+
+        # Apply Global Average Pooling
+        outputs = self.globalaveragepool(features)
+
+        # FC1-Layer
+        outputs = self.fc1(outputs)
+        outputs = self.relu1(outputs)
+        outputs = self.drop1(outputs)
+        
+        # FC2-Layer
+        outputs = self.fc2(outputs)
 
 
         return outputs
