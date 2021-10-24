@@ -18,7 +18,7 @@ from utilities import map_images_labels_annotators, MOD_MHSMA, MobileNetV2
 
 
 # Directories
-data_dir = "data"
+data_dir = "data/mod-hushem"
 data_splits = "data_splits.csv"
 
 
