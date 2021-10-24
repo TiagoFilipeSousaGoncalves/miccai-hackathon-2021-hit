@@ -116,7 +116,11 @@ y_test_pred = list()
 
 
 # Load model weights
-model.load_state_dict(torch.load("tiago/mobilenetv2.pt", map_location=DEVICE))
+# Baseline
+# model.load_state_dict(torch.load("tiago/mobilenetv2.pt", map_location=DEVICE))
+
+# Data Augmentation
+model.load_state_dict(torch.load("tiago/daug_mobilenetv2.pt", map_location=DEVICE))
 
 # Put model in training mode
 model.eval()
